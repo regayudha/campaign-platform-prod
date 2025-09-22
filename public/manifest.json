@@ -1,0 +1,18 @@
+{
+  "name": "CampaignHub - Transform Your Marketing",
+  "short_name": "CampaignHub",
+  "description": "Join thousands of marketers revolutionizing their campaigns with AI-powered insights and analytics.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ]
+}
