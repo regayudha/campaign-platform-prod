@@ -45,22 +45,37 @@ A modern, full-stack marketing campaign platform built with Next.js, featuring A
 
 1. **Clone and install dependencies**:
 ```bash
-git clone https://github.com/regayudha/campaign-platform.git
-cd campaign-platform
+git clone https://github.com/regayudha/campaign-platform-local.git
+cd campaign-platform-local
 npm install
 ```
 
 2. **Create environment file**:
+
+**Option A: Copy from example (Recommended)**:
 ```bash
-# Create .env.local file with required variables
+# Copy the example file and edit if needed
+cp .env.example .env.local
+```
+
+**Option B: Create manually**:
+```bash
+# For Linux/Mac
 echo "DATABASE_URL=file:./dev.db" > .env.local
 echo "NEXTAUTH_URL=http://localhost:3000" >> .env.local
 echo "NEXTAUTH_SECRET=campaign-hub-secret-key-2024" >> .env.local
 echo "ADMIN_EMAIL=admin@campaign.com" >> .env.local
 echo "ADMIN_PASSWORD=admin123" >> .env.local
+
+# For Windows PowerShell
+'DATABASE_URL="file:./dev.db"' | Out-File .env.local
+'NEXTAUTH_URL="http://localhost:3000"' | Add-Content .env.local
+'NEXTAUTH_SECRET="campaign-hub-secret-key-2024"' | Add-Content .env.local
+'ADMIN_EMAIL="admin@campaign.com"' | Add-Content .env.local
+'ADMIN_PASSWORD="admin123"' | Add-Content .env.local
 ```
 
-Or manually create a `.env.local` file with:
+**Option C: Manual creation** - Create a `.env.local` file with:
 ```env
 DATABASE_URL="file:./dev.db"
 NEXTAUTH_URL="http://localhost:3000"
@@ -96,10 +111,15 @@ npm run dev
 
 **Issue**: `Environment variable not found: DATABASE_URL` error
 - **Solution**: Make sure you've created the `.env.local` file in step 2
-- **Alternative**: Copy `.env.local` to `.env` if Prisma can't find the variables:
+- **If you see the error "Environment variable not found: DATABASE_URL"**, change `.env.local` to `.env`:
   ```bash
+  # Linux/Mac
   cp .env.local .env
+  
+  # Windows PowerShell
+  Copy-Item .env.local .env
   ```
+- **Alternative**: Rename your environment file from `.env.local` to `.env` if Prisma can't find the variables
 
 **Issue**: Database setup fails
 - **Solution**: Run the commands individually:
@@ -210,7 +230,9 @@ campaign-platform/
 
 ## 🔒 Environment Variables
 
-Create a `.env.local` file:
+The repository includes a `.env.example` file with all required variables. 
+
+Create a `.env.local` file (copy from `.env.example` or create manually):
 
 ```env
 DATABASE_URL="file:./dev.db"
