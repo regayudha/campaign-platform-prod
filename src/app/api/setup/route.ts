@@ -15,14 +15,15 @@ export async function POST(request: NextRequest) {
     console.log('🚀 Setting up database via API...')
 
     // Create admin user
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@campaign.com'
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
     const hashedPassword = await bcryptjs.hash(adminPassword, 12)
     
     const admin = await prisma.admin.upsert({
-      where: { email: 'admin@campaign.com' },
+      where: { email: adminEmail },
       update: {},
       create: {
-        email: 'admin@campaign.com',
+        email: adminEmail,
         password: hashedPassword,
         name: 'Admin User',
       },

@@ -3,12 +3,12 @@
 import { useState } from 'react'
 import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Mail, Lock, TrendingUp, AlertCircle } from 'lucide-react'
+import { Mail, Lock, AlertCircle, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -34,7 +34,6 @@ export default function AdminLogin() {
       if (result?.error) {
         setError('Invalid credentials. Please try again.')
       } else {
-        // Check if sign in was successful
         const session = await getSession()
         if (session) {
           router.push('/admin/dashboard')
@@ -48,98 +47,109 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
-      
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md relative z-10"
-      >
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="text-center space-y-4">
-            <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-primary/10 mx-auto">
-              <TrendingUp className="w-8 h-8 text-primary" />
-            </div>
-            <div className="space-y-2">
-              <CardTitle className="text-2xl font-semibold">Admin Portal</CardTitle>
-              <CardDescription>
-                Sign in to access your CampaignHub dashboard
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      {/* Back link */}
+      <div className="absolute top-8 left-8">
+        <Link 
+          href="/"
+          className="flex items-center text-gray-600 hover:text-gray-900 transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
+          Back to Home
+        </Link>
+      </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="w-full max-w-md">
+        <Card className="shadow-lg border-0">
+          <CardHeader className="text-center pb-8">
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 border-2 border-white rounded"></div>
+            </div>
+            <CardTitle className="text-2xl font-bold text-gray-900">
+              Admin Login
+            </CardTitle>
+            <p className="text-gray-600 mt-2">
+              Sign in to access your dashboard
+            </p>
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-foreground">
-                  Email Address
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     type="email"
                     id="email"
                     required
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="pl-10"
-                    placeholder="Enter your email"
+                    className="pl-10 h-11"
+                    placeholder="admin@campaign.com"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-foreground">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
                     type="password"
                     id="password"
                     required
                     value={formData.password}
                     onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                    className="pl-10"
+                    className="pl-10 h-11"
                     placeholder="Enter your password"
                   />
                 </div>
               </div>
 
               {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                </motion.div>
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
               )}
 
               <Button
                 type="submit"
-                size="lg"
                 disabled={isLoading}
-                className="w-full"
+                className="w-full h-11 bg-blue-600 hover:bg-blue-700"
               >
-                {isLoading ? 'Signing In...' : 'Sign In'}
+                {isLoading ? 'Signing in...' : 'Sign in'}
               </Button>
             </form>
 
-            <div className="text-center pt-4 border-t">
-              <p className="text-sm text-muted-foreground">
-                Demo: admin@campaign.com / admin123
-              </p>
+            <div className="border-t pt-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                <p className="text-sm font-semibold text-blue-800 mb-3">
+                  🔑 Admin Login Credentials
+                </p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <code className="bg-white px-3 py-1 rounded border font-medium text-blue-700">admin@campaign.com</code>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Password:</span>
+                    <code className="bg-white px-3 py-1 rounded border font-medium text-blue-700">admin123</code>
+                  </div>
+                </div>
+                <p className="text-xs text-blue-600 mt-3">
+                  These credentials are hardcoded in the environment variables
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
     </div>
   )
 }

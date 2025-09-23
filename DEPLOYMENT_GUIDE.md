@@ -1,19 +1,42 @@
-# Deployment Guide: PostgreSQL with Supabase & Vercel
+# Deployment Guide: Dual Database Setup (SQLite + PostgreSQL)
+
+## Overview
+This project supports both **SQLite for local development** and **PostgreSQL for production deployment** on Vercel with Supabase.
 
 ## Quick Start Checklist
 
+### Local Development
+- [x] SQLite database configured for local development
+- [x] Admin credentials hardcoded in environment variables
+- [x] Development server ready to run
+
+### Production Deployment
 - [ ] Create Supabase project and get DATABASE_URL
-- [ ] Set up environment variables (see section 2)
-- [ ] Generate NextAuth secret: `openssl rand -base64 32`
+- [ ] Set up Vercel environment variables
 - [ ] Push code to GitHub
 - [ ] Deploy to Vercel
-- [ ] Initialize database using setup API endpoint
+- [ ] Run database migration
+- [ ] Initialize admin user
 - [ ] Test admin login
 
 ---
 
-## 1. Supabase Setup
+## 1. Local Development (SQLite)
 
+Your local environment is already configured with SQLite:
+
+```env
+# .env.local (current setup)
+DATABASE_URL="file:./dev.db"
+ADMIN_EMAIL="admin@campaign.com"
+ADMIN_PASSWORD="admin123"
+```
+
+**Admin Login**: `admin@campaign.com` / `admin123`
+
+## 2. Production Setup (Supabase PostgreSQL)
+
+### Step 1: Create Supabase Project
 1. Go to [supabase.com](https://supabase.com) and create a new project
 2. Wait for the database to be provisioned
 3. Go to Settings > Database and copy your connection string
@@ -22,12 +45,12 @@
    postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
    ```
 
-## 2. Environment Variables
+### Step 2: Environment Variables
 
-Create a `.env.local` file for development:
+**For Local Development** (keep current `.env.local`):
 ```env
-# Database - Replace with your Supabase PostgreSQL connection string
-DATABASE_URL="postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres"
+# Database - SQLite for local development
+DATABASE_URL="file:./dev.db"
 
 # NextAuth.js
 NEXTAUTH_URL="http://localhost:3000"

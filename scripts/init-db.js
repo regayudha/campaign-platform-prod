@@ -7,15 +7,16 @@ async function main() {
   console.log('🚀 Initializing database...')
 
   // Create admin user
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@campaign.com'
   const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
   const hashedPassword = await bcryptjs.hash(adminPassword, 12)
   
   try {
     const admin = await prisma.admin.upsert({
-      where: { email: 'admin@campaign.com' },
+      where: { email: adminEmail },
       update: {},
       create: {
-        email: 'admin@campaign.com',
+        email: adminEmail,
         password: hashedPassword,
         name: 'Admin User',
       },
@@ -50,7 +51,6 @@ async function main() {
             userAgent: 'Mozilla/5.0 Sample Browser 3',
           },
         ],
-        skipDuplicates: true,
       })
       console.log('✅ Sample analytics data added')
     } catch (error) {
@@ -62,8 +62,8 @@ async function main() {
 
   console.log('🎉 Database initialization complete!')
   console.log('\n📝 Admin Login Credentials:')
-  console.log('Email: admin@campaign.com')
-  console.log('Password: admin123')
+  console.log(`Email: ${adminEmail}`)
+  console.log(`Password: ${adminPassword}`)
   console.log('\n🌐 Access URLs:')
   console.log('Landing Page: http://localhost:3000')
   console.log('Admin Login: http://localhost:3000/admin/login')

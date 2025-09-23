@@ -1,36 +1,53 @@
 const { PrismaClient } = require('@prisma/client')
+const bcryptjs = require('bcryptjs')
 
 const prisma = new PrismaClient()
 
-async function setupProduction() {
-  try {
-    console.log('🚀 Setting up production database...')
-    
-    // Check if we can connect to the database
-    await prisma.$connect()
-    console.log('✅ Database connection successful')
-    
-    // Run migrations
-    console.log('📦 Applying database migrations...')
-    // Note: In production, you might want to use `prisma migrate deploy` instead
-    
-    // Initialize database with admin user
-    console.log('👤 Setting up admin user...')
-    await require('./init-db.js')
-    
-    console.log('🎉 Production setup complete!')
-    
-  } catch (error) {
-    console.error('❌ Production setup failed:', error)
+async function main() {
+  console.log('🚀 Setting up production database...')
+
+  // Verify we're using PostgreSQL in production
+  if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.includes('postgresql://')) {
+    console.error('❌ DATABASE_URL must be a PostgreSQL connection string for production')
     process.exit(1)
-  } finally {
-    await prisma.$disconnect()
   }
+
+  // Create admin user
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@campaign.com'
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+  const hashedPassword = await bcryptjs.hash(adminPassword, 12)
+  
+  try {
+    const admin = await prisma.admin.upsert({
+      where: { email: adminEmail },
+      update: {
+        password: hashedPassword,
+        name: 'Admin User',
+      },
+      create: {
+        email: adminEmail,
+        password: hashedPassword,
+        name: 'Admin User',
+      },
+    })
+
+    console.log('✅ Admin user created/updated:', admin.email)
+  } catch (error) {
+    console.error('❌ Failed to create admin user:', error.message)
+    process.exit(1)
+  }
+
+  console.log('🎉 Production database setup complete!')
+  console.log('\n📝 Admin Login Credentials:')
+  console.log(`Email: ${adminEmail}`)
+  console.log(`Password: ${adminPassword}`)
 }
 
-// Only run if called directly
-if (require.main === module) {
-  setupProduction()
-}
-
-module.exports = { setupProduction }
+main()
+  .catch((e) => {
+    console.error('❌ Error setting up production database:', e)
+    process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
+  })

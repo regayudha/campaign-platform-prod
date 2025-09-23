@@ -3,13 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { signOut } from 'next-auth/react'
 import { 
   Users, 
@@ -19,8 +17,7 @@ import {
   Phone,
   Download,
   LogOut,
-  Activity,
-  UserCheck
+  RefreshCw
 } from 'lucide-react'
 
 interface User {
@@ -62,9 +59,11 @@ export default function AdminDashboard() {
       if (response.ok) {
         const data = await response.json()
         setAnalytics(data)
+      } else {
+        console.error('Failed to fetch analytics')
       }
     } catch (error) {
-      console.error('Failed to fetch analytics:', error)
+      console.error('Error fetching analytics:', error)
     } finally {
       setLoading(false)
     }
@@ -91,10 +90,10 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          <p className="text-muted-foreground">Loading dashboard...</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
         </div>
       </div>
     )
@@ -102,14 +101,17 @@ export default function AdminDashboard() {
 
   if (!analytics) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl">Failed to load dashboard</CardTitle>
-            <CardDescription>There was an error loading your analytics data</CardDescription>
+            <CardTitle>Error Loading Dashboard</CardTitle>
+            <CardDescription>Unable to load analytics data</CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Button onClick={fetchAnalytics}>Retry</Button>
+            <Button onClick={fetchAnalytics} className="bg-blue-600 hover:bg-blue-700">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -117,31 +119,23 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                <Activity className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">Admin Dashboard</h1>
-                <p className="text-sm text-muted-foreground">CampaignHub</p>
-              </div>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">CampaignHub Admin</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <div className="hidden sm:block">
-                <p className="text-sm text-muted-foreground">Welcome back,</p>
-                <p className="text-sm font-medium text-foreground">{session?.user?.name}</p>
-              </div>
-              <Separator orientation="vertical" className="h-8" />
+              <span className="text-sm text-gray-600">
+                Welcome, {session?.user?.name}
+              </span>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => signOut()}
-                className="flex items-center"
+                className="text-gray-700 border-gray-300"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
@@ -152,176 +146,121 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
+        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.totalSignups}</div>
-                <p className="text-xs text-muted-foreground">
-                  All registered users
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Total Users</CardTitle>
+              <Users className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{analytics.totalSignups}</div>
+              <p className="text-xs text-gray-500">All time registrations</p>
+            </CardContent>
+          </Card>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">This Week</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.signupsThisWeek}</div>
-                <p className="text-xs text-muted-foreground">
-                  +{Math.round((analytics.signupsThisWeek / analytics.totalSignups) * 100)}% from last week
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Page Views</CardTitle>
+              <Eye className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{analytics.totalPageViews}</div>
+              <p className="text-xs text-gray-500">Total visits</p>
+            </CardContent>
+          </Card>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Today</CardTitle>
-                <UserCheck className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.signupsToday}</div>
-                <p className="text-xs text-muted-foreground">
-                  New signups today
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Today</CardTitle>
+              <TrendingUp className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{analytics.signupsToday}</div>
+              <p className="text-xs text-gray-500">New signups</p>
+            </CardContent>
+          </Card>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Page Views</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{analytics.totalPageViews}</div>
-                <p className="text-xs text-muted-foreground">
-                  Total page interactions
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">This Week</CardTitle>
+              <TrendingUp className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900">{analytics.signupsThisWeek}</div>
+              <p className="text-xs text-gray-500">Weekly signups</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Recent Signups */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Recent Signups</CardTitle>
-                  <CardDescription>
-                    Latest users who joined your platform
-                  </CardDescription>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleExportUsers}
-                  className="flex items-center"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Export CSV
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {analytics.recentSignups.length > 0 ? (
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recent Signups</CardTitle>
+              <CardDescription>Latest user registrations</CardDescription>
+            </div>
+            <Button onClick={handleExportUsers} variant="outline" size="sm">
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {analytics.recentSignups.length > 0 ? (
+              <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>User</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Phone</TableHead>
-                      <TableHead>Status</TableHead>
                       <TableHead>Joined</TableHead>
+                      <TableHead>Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {analytics.recentSignups.map((user, index) => (
-                      <TableRow
-                        key={user.id}
-                        className="animate-in fade-in-0 slide-in-from-left-5"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                          <TableCell>
-                            <div className="flex items-center space-x-3">
-                              <Avatar className="h-8 w-8">
-                                <AvatarFallback className="bg-primary/10 text-primary">
-                                  {user.name.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="text-sm font-medium">{user.name}</p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-2">
-                              <Mail className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-sm">{user.email}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-2">
-                              <Phone className="w-4 h-4 text-muted-foreground" />
-                              <span className="text-sm">{user.phone}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary" className="text-xs">
-                              Active
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
-                            {new Date(user.createdAt).toLocaleDateString()}
-                          </TableCell>
-                        </TableRow>
+                    {analytics.recentSignups.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="flex items-center space-x-3">
+                          <Avatar>
+                            <AvatarFallback className="bg-blue-600 text-white">
+                              {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium">{user.name}</span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Mail className="w-4 h-4 mr-2" />
+                            {user.email}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Phone className="w-4 h-4 mr-2" />
+                            {user.phone}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-sm">
+                          {new Date(user.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className="bg-green-100 text-green-800">Active</Badge>
+                        </TableCell>
+                      </TableRow>
                     ))}
                   </TableBody>
                 </Table>
-              ) : (
-                <div className="text-center py-12">
-                  <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-foreground mb-2">No users yet</h3>
-                  <p className="text-muted-foreground">Users will appear here once they sign up</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No signups yet</h3>
+                <p className="text-gray-500">When users register, they&apos;ll appear here.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </main>
     </div>
   )
