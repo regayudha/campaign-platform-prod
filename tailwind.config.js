@@ -48,6 +48,31 @@ module.exports = {
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))',
         },
+        // Restore the standard Tailwind colors for compatibility
+        blue: {
+          500: '#3b82f6',
+        },
+        purple: {
+          500: '#8b5cf6',
+        },
+        yellow: {
+          500: '#eab308',
+        },
+        green: {
+          500: '#22c55e',
+        },
+        red: {
+          500: '#ef4444',
+        },
+        indigo: {
+          500: '#6366f1',
+        },
+        gray: {
+          50: '#f9fafb',
+          100: '#f3f4f6',
+          600: '#4b5563',
+          900: '#111827',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
