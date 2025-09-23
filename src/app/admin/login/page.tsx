@@ -5,7 +5,10 @@ import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
-import { Mail, Lock, Shield } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Mail, Lock, TrendingUp, AlertCircle } from 'lucide-react'
 
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
@@ -45,83 +48,97 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
+      
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Shield className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Login</h1>
-          <p className="text-gray-600">Access your CampaignHub dashboard</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="email"
-                id="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500 bg-white"
-                placeholder="Enter your email"
-              />
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="text-center space-y-4">
+            <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-primary/10 mx-auto">
+              <TrendingUp className="w-8 h-8 text-primary" />
             </div>
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="password"
-                id="password"
-                required
-                value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500 bg-white"
-                placeholder="Enter your password"
-              />
+            <div className="space-y-2">
+              <CardTitle className="text-2xl font-semibold">Admin Portal</CardTitle>
+              <CardDescription>
+                Sign in to access your CampaignHub dashboard
+              </CardDescription>
             </div>
-          </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
 
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"
-            >
-              {error}
-            </motion.div>
-          )}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium text-foreground">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    type="email"
+                    id="email"
+                    required
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    className="pl-10"
+                    placeholder="Enter your email"
+                  />
+                </div>
+              </div>
 
-          <Button
-            type="submit"
-            size="lg"
-            disabled={isLoading}
-            className="w-full"
-          >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </Button>
-        </form>
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium text-foreground">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    type="password"
+                    id="password"
+                    required
+                    value={formData.password}
+                    onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                    className="pl-10"
+                    placeholder="Enter your password"
+                  />
+                </div>
+              </div>
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-500">
-            Demo credentials: admin@campaign.com / admin123
-          </p>
-        </div>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
+
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isLoading}
+                className="w-full"
+              >
+                {isLoading ? 'Signing In...' : 'Sign In'}
+              </Button>
+            </form>
+
+            <div className="text-center pt-4 border-t">
+              <p className="text-sm text-muted-foreground">
+                Demo: admin@campaign.com / admin123
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
     </div>
   )

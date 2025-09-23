@@ -21,8 +21,10 @@ A modern, full-stack marketing campaign platform built with Next.js, featuring A
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS 4, Framer Motion
-- **Database**: SQLite with Prisma ORM
+- **Database**: PostgreSQL with Supabase (Production) / SQLite (Development)
+- **ORM**: Prisma
 - **Authentication**: NextAuth.js with JWT
+- **Deployment**: Vercel
 - **Icons**: Lucide React
 - **Analytics**: Custom analytics system with event tracking
 
@@ -216,13 +218,17 @@ campaign-platform/
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
-1. Push code to GitHub
-2. Connect repository to Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy automatically
+### PostgreSQL + Supabase + Vercel (Recommended)
 
-### Manual Deployment
+**📖 For detailed deployment instructions, see [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)**
+
+Quick steps:
+1. Create Supabase project and get DATABASE_URL
+2. Push code to GitHub
+3. Deploy to Vercel with environment variables
+4. Initialize database using setup API endpoint
+
+### Legacy SQLite Deployment
 1. Build the project: `npm run build`
 2. Set up production database
 3. Configure environment variables

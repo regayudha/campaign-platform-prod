@@ -7,7 +7,8 @@ async function main() {
   console.log('🚀 Initializing database...')
 
   // Create admin user
-  const hashedPassword = await bcryptjs.hash('admin123', 12)
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+  const hashedPassword = await bcryptjs.hash(adminPassword, 12)
   
   try {
     const admin = await prisma.admin.upsert({
@@ -25,34 +26,38 @@ async function main() {
     console.log('ℹ️  Admin user already exists or error:', error.message)
   }
 
-  // Add some sample analytics data
-  try {
-    await prisma.analytics.createMany({
-      data: [
-        {
-          event: 'page_view',
-          data: JSON.stringify({ page: '/' }),
-          ipAddress: '127.0.0.1',
-          userAgent: 'Mozilla/5.0 Sample Browser',
-        },
-        {
-          event: 'page_view',
-          data: JSON.stringify({ page: '/' }),
-          ipAddress: '192.168.1.1',
-          userAgent: 'Mozilla/5.0 Sample Browser 2',
-        },
-        {
-          event: 'page_view',
-          data: JSON.stringify({ page: '/' }),
-          ipAddress: '10.0.0.1',
-          userAgent: 'Mozilla/5.0 Sample Browser 3',
-        },
-      ],
-      skipDuplicates: true,
-    })
-    console.log('✅ Sample analytics data added')
-  } catch (error) {
-    console.log('ℹ️  Analytics data already exists or error:', error.message)
+  // Add sample analytics data only in development
+  if (process.env.NODE_ENV !== 'production') {
+    try {
+      await prisma.analytics.createMany({
+        data: [
+          {
+            event: 'page_view',
+            data: JSON.stringify({ page: '/' }),
+            ipAddress: '127.0.0.1',
+            userAgent: 'Mozilla/5.0 Sample Browser',
+          },
+          {
+            event: 'page_view',
+            data: JSON.stringify({ page: '/' }),
+            ipAddress: '192.168.1.1',
+            userAgent: 'Mozilla/5.0 Sample Browser 2',
+          },
+          {
+            event: 'page_view',
+            data: JSON.stringify({ page: '/' }),
+            ipAddress: '10.0.0.1',
+            userAgent: 'Mozilla/5.0 Sample Browser 3',
+          },
+        ],
+        skipDuplicates: true,
+      })
+      console.log('✅ Sample analytics data added')
+    } catch (error) {
+      console.log('ℹ️  Analytics data already exists or error:', error.message)
+    }
+  } else {
+    console.log('ℹ️  Skipping sample data in production environment')
   }
 
   console.log('🎉 Database initialization complete!')
