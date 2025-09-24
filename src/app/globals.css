@@ -87,4 +87,16 @@
       linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
     background-size: 32px 32px;
   }
+
+  /* Placeholder styling for better UX */
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-gray-400 opacity-100;
+  }
+
+  /* Dark mode placeholder styling */
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    @apply text-gray-500;
+  }
 }
