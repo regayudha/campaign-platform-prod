@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Button } from './ui/Button'
 import { Input } from './ui/input'
 import { CheckCircle } from 'lucide-react'
@@ -126,9 +127,9 @@ export default function SignupForm() {
                 Sign up another person
               </Button>
               <div>
-                <a href="/" className="text-sm text-blue-600 hover:underline">
+                <Link href="/" className="text-sm text-blue-600 hover:underline">
                   Back to home
-                </a>
+                </Link>
               </div>
             </div>
           </div>
