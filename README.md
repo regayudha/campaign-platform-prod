@@ -55,7 +55,7 @@ npm install
    # Get these from your Supabase project dashboard
    NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-   DATABASE_URL="postgresql://postgres.your-ref:your-password@aws-region.pooler.supabase.co:5432/postgres?sslmode=require"
+   POSTGRES_PRISMA_URL="postgresql://postgres.your-ref:your-password@aws-region.pooler.supabase.co:5432/postgres?sslmode=require"
    
    # Application settings
    NODE_ENV="development"
@@ -145,10 +145,12 @@ npm run db:init      # Initialize with sample data and admin user
    ```
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   DATABASE_URL=your_postgresql_connection_string
+   POSTGRES_PRISMA_URL=your_postgresql_connection_string
    NODE_ENV=production
    SETUP_SECRET=your-production-secret
    ```
+   
+   **⚠️ Important**: Make sure `POSTGRES_PRISMA_URL` is set correctly - this is required for all database operations.
 3. **Deploy** - Vercel handles the build automatically
 
 ### **Manual Deployment**

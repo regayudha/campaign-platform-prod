@@ -7,14 +7,14 @@ async function main() {
   console.log('🚀 Setting up production database...')
 
   // Verify we're using PostgreSQL in production
-  if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.includes('postgresql://')) {
-    console.error('❌ DATABASE_URL must be a PostgreSQL connection string for production')
+  if (!process.env.POSTGRES_PRISMA_URL || !process.env.POSTGRES_PRISMA_URL.includes('postgresql://')) {
+    console.error('❌ POSTGRES_PRISMA_URL must be a PostgreSQL connection string for production')
     process.exit(1)
   }
 
-  // Create admin user
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@campaign.com'
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+  // Create admin user with default credentials
+  const adminEmail = 'admin@campaign.com'
+  const adminPassword = 'admin123'
   const hashedPassword = await bcryptjs.hash(adminPassword, 12)
   
   try {
