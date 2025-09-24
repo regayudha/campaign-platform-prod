@@ -6,9 +6,9 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🚀 Initializing database...')
 
-  // Create admin user
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@campaign.com'
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+  // Create admin user with default credentials
+  const adminEmail = 'admin@campaign.com'
+  const adminPassword = 'admin123'
   const hashedPassword = await bcryptjs.hash(adminPassword, 12)
   
   try {

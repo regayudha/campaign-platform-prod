@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Mail, Lock, AlertCircle, ArrowLeft } from 'lucide-react'
+import { signInAdmin } from '@/lib/auth-supabase'
 import Link from 'next/link'
 
 export default function AdminLogin() {
@@ -25,19 +25,12 @@ export default function AdminLogin() {
     setError('')
 
     try {
-      const result = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      })
+      const { user, error: authError } = await signInAdmin(formData.email, formData.password)
 
-      if (result?.error) {
-        setError('Invalid credentials. Please try again.')
+      if (authError || !user) {
+        setError(authError || 'Invalid credentials. Please try again.')
       } else {
-        const session = await getSession()
-        if (session) {
-          router.push('/admin/dashboard')
-        }
+        router.push('/admin/dashboard')
       }
     } catch {
       setError('Something went wrong. Please try again.')

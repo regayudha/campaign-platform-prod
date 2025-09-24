@@ -1,11 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Button } from './ui/Button'
 import { Input } from './ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { CheckCircle, Mail, User, Phone } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 
 interface FormData {
   name: string
@@ -104,150 +102,167 @@ export default function SignupForm() {
 
   if (isSuccess) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="text-center py-12"
-      >
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-          className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
-        >
-          <CheckCircle className="w-10 h-10 text-green-600" />
-        </motion.div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-4">Welcome Aboard! 🎉</h3>
-        <p className="text-gray-600 mb-8 max-w-md mx-auto">
-          Thank you for joining CampaignHub! We&apos;ve sent a confirmation email to <strong>{formData.email}</strong>. 
-          Get ready to transform your marketing campaigns!
-        </p>
-        <Button 
-          onClick={() => {
-            setIsSuccess(false)
-            setFormData({ name: '', email: '', phone: '' })
-          }}
-          variant="outline"
-        >
-          Sign Up Another Person
-        </Button>
-      </motion.div>
+      <section id="signup" className="py-16 bg-gray-50">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-lg shadow-sm border p-8 text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              Account created successfully
+            </h3>
+            <p className="text-gray-600 mb-8">
+              Thanks for signing up! We&apos;ve sent a confirmation email to{' '}
+              <span className="font-medium text-gray-900">{formData.email}</span>.
+            </p>
+            <div className="space-y-3">
+              <Button 
+                onClick={() => {
+                  setIsSuccess(false)
+                  setFormData({ name: '', email: '', phone: '' })
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Sign up another person
+              </Button>
+              <div>
+                <a href="#" className="text-sm text-blue-600 hover:underline">
+                  Go to dashboard
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     )
   }
 
   return (
-    <section id="signup" className="py-20 bg-muted/30">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-foreground mb-4"
-          >
-            Start Your Journey
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg text-muted-foreground"
-          >
-            Join professionals who trust our platform for their marketing needs
-          </motion.p>
-        </div>
+    <section id="signup" className="py-16 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left side - Content */}
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Ready to get started?
+            </h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Join over 5,000 marketers already using our platform to grow their business.
+            </p>
+            
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="w-3 h-3 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Free to start</h3>
+                  <p className="text-gray-600 text-sm">No credit card required. Cancel anytime.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="w-3 h-3 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Setup in minutes</h3>
+                  <p className="text-gray-600 text-sm">Quick onboarding gets you running fast.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3">
+                <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center mt-1">
+                  <CheckCircle className="w-3 h-3 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Expert support</h3>
+                  <p className="text-gray-600 text-sm">Get help when you need it from real people.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-lg mx-auto"
-        >
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="text-center">
-              <CardTitle className="text-xl">Create Your Account</CardTitle>
-              <CardDescription>
-                Get started with your free account today
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium text-foreground">
-                    Full Name
+          {/* Right side - Form */}
+          <div>
+            <div className="bg-white rounded-lg shadow-sm border p-8">
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Create your account
+                </h3>
+                <p className="text-gray-600">
+                  Start your free trial today
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Your name
                   </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      id="name"
-                      value={formData.name}
-                      onChange={handleInputChange('name')}
-                      className={`pl-10 ${errors.name ? 'border-destructive' : ''}`}
-                      placeholder="Enter your full name"
-                    />
-                  </div>
+                  <Input
+                    type="text"
+                    id="name"
+                    value={formData.name}
+                    onChange={handleInputChange('name')}
+                    className={`w-full h-11 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+                    placeholder="John Smith"
+                  />
                   {errors.name && (
-                    <p className="text-sm text-destructive">{errors.name}</p>
+                    <p className="text-sm text-red-600 mt-1">{errors.name}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-foreground">
-                    Email Address
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Work email
                   </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="email"
-                      id="email"
-                      value={formData.email}
-                      onChange={handleInputChange('email')}
-                      className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
-                      placeholder="Enter your email address"
-                    />
-                  </div>
+                  <Input
+                    type="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleInputChange('email')}
+                    className={`w-full h-11 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                    placeholder="john@company.com"
+                  />
                   {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email}</p>
+                    <p className="text-sm text-red-600 mt-1">{errors.email}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-foreground">
-                    Phone Number
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone number
                   </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="tel"
-                      id="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange('phone')}
-                      className={`pl-10 ${errors.phone ? 'border-destructive' : ''}`}
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
+                  <Input
+                    type="tel"
+                    id="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange('phone')}
+                    className={`w-full h-11 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+                    placeholder="+1 (555) 123-4567"
+                  />
                   {errors.phone && (
-                    <p className="text-sm text-destructive">{errors.phone}</p>
+                    <p className="text-sm text-red-600 mt-1">{errors.phone}</p>
                   )}
                 </div>
 
                 <Button
                   type="submit"
-                  size="lg"
                   disabled={isSubmitting}
-                  className="w-full"
+                  className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
                 >
-                  {isSubmitting ? 'Creating Account...' : 'Create Account'}
+                  {isSubmitting ? 'Creating account...' : 'Get started free'}
                 </Button>
 
-                <p className="text-xs text-muted-foreground text-center">
-                  By signing up, you agree to our Terms of Service and Privacy Policy
+                <p className="text-xs text-gray-500 text-center leading-relaxed">
+                  By creating an account, you agree to our{' '}
+                  <a href="#" className="text-blue-600 hover:underline">Terms</a>
+                  {' '}and{' '}
+                  <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>
                 </p>
               </form>
-            </CardContent>
-          </Card>
-        </motion.div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   )

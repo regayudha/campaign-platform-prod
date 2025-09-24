@@ -1,14 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import { signOut } from 'next-auth/react'
+import { getCurrentAdmin, signOutAdmin, type AdminUser } from '@/lib/auth-supabase'
 import { 
   Users, 
   TrendingUp, 
@@ -37,21 +36,22 @@ interface Analytics {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const [admin, setAdmin] = useState<AdminUser | null>(null)
   const [analytics, setAnalytics] = useState<Analytics | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (status === 'loading') return
+    const currentAdmin = getCurrentAdmin()
     
-    if (!session) {
+    if (!currentAdmin) {
       router.push('/admin/login')
       return
     }
 
+    setAdmin(currentAdmin)
     fetchAnalytics()
-  }, [session, status, router])
+  }, [router])
 
   const fetchAnalytics = async () => {
     try {
@@ -129,12 +129,15 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
-                Welcome, {session?.user?.name}
+                Welcome, {admin?.name}
               </span>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => signOut()}
+                onClick={async () => {
+                  await signOutAdmin()
+                  router.push('/admin/login')
+                }}
                 className="text-gray-700 border-gray-300"
               >
                 <LogOut className="w-4 h-4 mr-2" />
