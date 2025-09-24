@@ -126,8 +126,8 @@ export default function SignupForm() {
                 Sign up another person
               </Button>
               <div>
-                <a href="#" className="text-sm text-blue-600 hover:underline">
-                  Go to dashboard
+                <a href="/" className="text-sm text-blue-600 hover:underline">
+                  Back to home
                 </a>
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function SignupForm() {
                     value={formData.name}
                     onChange={handleInputChange('name')}
                     className={`w-full h-11 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
-                    placeholder="John Smith"
+                        placeholder="Your full name"
                   />
                   {errors.name && (
                     <p className="text-sm text-red-600 mt-1">{errors.name}</p>
@@ -221,7 +221,7 @@ export default function SignupForm() {
                     value={formData.email}
                     onChange={handleInputChange('email')}
                     className={`w-full h-11 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                    placeholder="john@company.com"
+                        placeholder="your.email@company.com"
                   />
                   {errors.email && (
                     <p className="text-sm text-red-600 mt-1">{errors.email}</p>
@@ -238,7 +238,7 @@ export default function SignupForm() {
                     value={formData.phone}
                     onChange={handleInputChange('phone')}
                     className={`w-full h-11 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
-                    placeholder="+1 (555) 123-4567"
+                        placeholder="Phone number (optional)"
                   />
                   {errors.phone && (
                     <p className="text-sm text-red-600 mt-1">{errors.phone}</p>

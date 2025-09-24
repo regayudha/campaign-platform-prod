@@ -81,7 +81,7 @@ export default function AdminLogin() {
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                     className="pl-10 h-11"
-                    placeholder="admin@campaign.com"
+                    placeholder="Enter your email"
                   />
                 </div>
               </div>
